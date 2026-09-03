@@ -72,10 +72,29 @@
   .upload-tile { aspect-ratio: 1 / 1; border-radius: 10px; border: 1.5px dashed var(--oak); background: transparent; color: var(--oak-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
   .upload-tile span { font-size: 10.5px; }
   .empty-hint { font-size: 12.5px; color: var(--oak-dark); margin-top: 12px; line-height: 1.5; }
+
+  .lock-screen { position: fixed; inset: 0; background: var(--walnut); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
+  .lock-card { width: 100%; max-width: 320px; text-align: center; }
+  .lock-card .wordmark { color: var(--linen); }
+  .lock-hint { font-size: 13px; color: var(--oak); margin: 8px 0 20px; }
+  .lock-input { width: 100%; padding: 13px 14px; border-radius: 10px; border: 1.5px solid var(--oak); background: var(--linen); color: var(--ink); font-size: 15px; font-family: inherit; margin-bottom: 12px; }
+  .lock-input:focus { outline: none; border-color: var(--linen); }
+  .lock-submit { width: 100%; background: var(--denim); color: var(--linen); border: none; border-radius: 10px; padding: 13px 0; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.02em; cursor: pointer; }
+  .lock-error { font-size: 12.5px; color: #E8A38C; margin-top: 12px; min-height: 16px; }
 </style>
 </head>
 <body>
-<div class="page">
+<div id="lock-screen" class="lock-screen">
+  <div class="lock-card">
+    <div class="wordmark">outfit</div>
+    <p class="lock-hint">Enter password to open your closet</p>
+    <input type="password" id="lock-input" class="lock-input" placeholder="Password" autocomplete="off" />
+    <button id="lock-submit" class="lock-submit">Unlock</button>
+    <p class="lock-error" id="lock-error"></p>
+  </div>
+</div>
+
+<div class="page" id="app-page" style="display:none;">
   <header>
     <div class="wordmark">outfit</div>
     <div class="tagline">stop deciding. start dressing.</div>
@@ -128,6 +147,32 @@
 </div>
 
 <script>
+  const APP_PASSWORD = 'pramu123'; // change this anytime to whatever you like
+  const UNLOCK_KEY = 'outfitAppUnlocked';
+
+  function tryUnlock(value) {
+    if (value === APP_PASSWORD) {
+      sessionStorage.setItem(UNLOCK_KEY, 'yes');
+      document.getElementById('lock-screen').style.display = 'none';
+      document.getElementById('app-page').style.display = 'block';
+    } else {
+      document.getElementById('lock-error').textContent = 'Wrong password, try again.';
+    }
+  }
+
+  document.getElementById('lock-submit').addEventListener('click', () => {
+    tryUnlock(document.getElementById('lock-input').value);
+  });
+  document.getElementById('lock-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') tryUnlock(e.target.value);
+  });
+
+  if (sessionStorage.getItem(UNLOCK_KEY) === 'yes') {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('app-page').style.display = 'block';
+  }
+</script>
+
   const CATEGORIES = [
     { key: 'tshirt', label: 'T-shirts' },
     { key: 'shirt', label: 'Shirts' },
@@ -390,3 +435,4 @@
 </script>
 </body>
 </html>
+  
