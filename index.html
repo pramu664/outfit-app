@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>outfit</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Outfit" />
+<meta name="theme-color" content="#4A3728" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234A3728'/%3E%3Cpath d='M69 22 58 16a10 10 0 0 1-16 0L31 22a6 6 0 0 0-4 6l2 10a3 3 0 0 0 3 2h6v30c0 1.7 1.3 3 3 3h22c1.7 0 3-1.3 3-3V40h6a3 3 0 0 0 3-2l2-10a6 6 0 0 0-4-6z' fill='%23F6F1E7'/%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234A3728'/%3E%3Cpath d='M69 22 58 16a10 10 0 0 1-16 0L31 22a6 6 0 0 0-4 6l2 10a3 3 0 0 0 3 2h6v30c0 1.7 1.3 3 3 3h22c1.7 0 3-1.3 3-3V40h6a3 3 0 0 0 3-2l2-10a6 6 0 0 0-4-6z' fill='%23F6F1E7'/%3E%3C/svg%3E" />
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Work+Sans:wght@400;500&display=swap');
+  :root {
+    --ink: #211C18;
+    --walnut: #4A3728;
+    --oak: #C89A62;
+    --oak-dark: #8A6B3F;
+    --linen: #F6F1E7;
+    --linen-deep: #EEE6D6;
+    --denim: #33526B;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--linen);
+    color: var(--ink);
+    font-family: 'Work Sans', system-ui, sans-serif;
+    overscroll-behavior-y: contain;
+  }
+  .page { max-width: 420px; margin: 0 auto; padding: 28px 20px 40px; }
+  .wordmark { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 600; font-size: 26px; letter-spacing: -0.02em; color: var(--walnut); }
+  .tagline { font-size: 13px; color: var(--oak-dark); margin-top: 2px; }
+  .board { background: var(--walnut); border-radius: 18px; padding: 22px 18px 20px; margin: 22px 0 28px; }
+  .slots { display: flex; gap: 12px; margin-bottom: 16px; }
+  .slot { flex: 1; background: var(--linen); border-radius: 12px; border: 1px solid var(--oak); min-height: 150px; display: flex; flex-direction: column; overflow: hidden; }
+  .slot-label { font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 10px; letter-spacing: 0.06em; color: var(--oak-dark); padding: 6px 10px 4px; }
+  .slot-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px; }
+  .slot-body img { max-width: 100%; max-height: 130px; object-fit: contain; }
+  .slot-body svg { color: var(--oak-dark); }
+  .notice { font-size: 12.5px; color: #EFD9BF; margin-bottom: 12px; line-height: 1.5; min-height: 0; }
+  .board-actions { display: flex; gap: 8px; }
+  .shuffle-btn { flex: 1; background: var(--denim); color: var(--linen); border: none; border-radius: 10px; padding: 13px 0; font-family: 'Space Grotesk', system-ui, sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.02em; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
+  .save-btn { width: 48px; background: transparent; border: 1.5px solid var(--oak); color: var(--linen); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .save-btn.active { background: var(--oak); color: var(--walnut); }
+  .saved-section { margin-bottom: 26px; }
+  .saved-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .saved-title { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 600; font-size: 15px; color: var(--walnut); }
+  .saved-count { font-size: 12px; color: var(--oak-dark); }
+  .saved-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+  .saved-card { position: relative; flex: 0 0 auto; width: 64px; background: #fff; border: 1px solid var(--linen-deep); border-radius: 10px; padding: 5px; cursor: pointer; }
+  .saved-card img { width: 100%; height: 26px; object-fit: contain; display: block; }
+  .saved-card .divider { height: 1px; background: var(--linen-deep); margin: 3px 0; }
+  .saved-remove { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%; border: none; background: var(--walnut); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+  .saved-empty { font-size: 12.5px; color: var(--oak-dark); }
+  .closet-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+  .closet-title { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 600; font-size: 15px; color: var(--walnut); }
+  .closet-count { font-size: 12px; color: var(--oak-dark); }
+  .tabs { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; }
+  .tab { background: transparent; border: 1px solid var(--linen-deep); border-radius: 999px; padding: 6px 12px; font-size: 12.5px; color: var(--walnut); display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap; font-family: inherit; }
+  .tab.active { background: var(--walnut); border-color: var(--walnut); color: var(--linen); }
+  .tab .count { font-size: 10.5px; opacity: 0.75; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .item-card { position: relative; aspect-ratio: 1 / 1; border-radius: 10px; overflow: hidden; border: 1px solid var(--linen-deep); background: #fff; }
+  .item-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .item-remove { position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; border-radius: 50%; border: none; background: rgba(33,28,24,0.65); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+  .upload-tile { aspect-ratio: 1 / 1; border-radius: 10px; border: 1.5px dashed var(--oak); background: transparent; color: var(--oak-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
+  .upload-tile span { font-size: 10.5px; }
+  .empty-hint { font-size: 12.5px; color: var(--oak-dark); margin-top: 12px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="wordmark">outfit</div>
+    <div class="tagline">stop deciding. start dressing.</div>
+  </header>
+
+  <section class="board">
+    <div class="slots">
+      <div class="slot">
+        <div class="slot-label">top</div>
+        <div class="slot-body" id="slot-top"></div>
+      </div>
+      <div class="slot">
+        <div class="slot-label">bottom</div>
+        <div class="slot-body" id="slot-bottom"></div>
+      </div>
+    </div>
+    <div class="notice" id="notice"></div>
+    <div class="board-actions">
+      <button class="shuffle-btn" id="shuffle-btn">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        shuffle
+      </button>
+      <button class="save-btn" id="save-btn" aria-label="Save this outfit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <section class="saved-section">
+    <div class="saved-head">
+      <span class="saved-title">saved fits</span>
+      <span class="saved-count" id="saved-count">0</span>
+    </div>
+    <div class="saved-row" id="saved-row"></div>
+    <p class="saved-empty" id="saved-empty">Tap the bookmark icon above to save an outfit you like.</p>
+  </section>
+
+  <section class="closet">
+    <div class="closet-head">
+      <span class="closet-title">the rail</span>
+      <span class="closet-count" id="total-count">0 items</span>
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+    <div class="grid" id="grid"></div>
+    <p class="empty-hint" id="empty-hint"></p>
+
+    <input id="file-input" type="file" accept="image/*" multiple style="display:none" />
+  </section>
+</div>
+
+<script>
+  const CATEGORIES = [
+    { key: 'tshirt', label: 'T-shirts' },
+    { key: 'shirt', label: 'Shirts' },
+    { key: 'trouser', label: 'Trousers' },
+  ];
+
+  const STORAGE_KEY = 'outfitAppData_v1';
+
+  const state = {
+    items: { tshirt: [], shirt: [], trouser: [] },
+    savedOutfits: [],
+    activeTab: 'tshirt',
+    outfit: { top: null, bottom: null },
+    notice: '',
+  };
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (parsed.items) state.items = parsed.items;
+      if (parsed.savedOutfits) state.savedOutfits = parsed.savedOutfits;
+    } catch (e) {
+      console.warn('Could not load saved data', e);
+    }
+  }
+
+  function persistState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        items: state.items,
+        savedOutfits: state.savedOutfits,
+      }));
+    } catch (e) {
+      state.notice = 'Storage is full — try removing a few photos.';
+    }
+  }
+
+  const shirtIconSVG = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>';
+
+  function uid() {
+    return Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+  }
+
+  function currentOutfitIsSaved() {
+    if (!state.outfit.top || !state.outfit.bottom) return false;
+    return state.savedOutfits.some(
+      (o) => o.top.id === state.outfit.top.id && o.bottom.id === state.outfit.bottom.id
+    );
+  }
+
+  function render() {
+    document.getElementById('total-count').textContent =
+      (state.items.tshirt.length + state.items.shirt.length + state.items.trouser.length) + ' items';
+
+    document.getElementById('slot-top').innerHTML = state.outfit.top
+      ? '<img src="' + state.outfit.top.src + '" />' : shirtIconSVG;
+    document.getElementById('slot-bottom').innerHTML = state.outfit.bottom
+      ? '<img src="' + state.outfit.bottom.src + '" />' : shirtIconSVG;
+
+    document.getElementById('notice').textContent = state.notice;
+
+    const saveBtn = document.getElementById('save-btn');
+    const isSaved = currentOutfitIsSaved();
+    saveBtn.classList.toggle('active', isSaved);
+    saveBtn.disabled = !state.outfit.top || !state.outfit.bottom;
+    saveBtn.style.opacity = saveBtn.disabled ? 0.4 : 1;
+
+    document.getElementById('saved-count').textContent = state.savedOutfits.length;
+    const savedRow = document.getElementById('saved-row');
+    const savedEmpty = document.getElementById('saved-empty');
+    savedRow.innerHTML = '';
+    savedEmpty.style.display = state.savedOutfits.length === 0 ? 'block' : 'none';
+    savedRow.style.display = state.savedOutfits.length === 0 ? 'none' : 'flex';
+    state.savedOutfits.forEach((fit) => {
+      const card = document.createElement('div');
+      card.className = 'saved-card';
+      card.innerHTML =
+        '<img src="' + fit.top.src + '" />' +
+        '<div class="divider"></div>' +
+        '<img src="' + fit.bottom.src + '" />' +
+        '<button class="saved-remove" aria-label="Remove saved outfit">' +
+        '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+      card.addEventListener('click', () => {
+        state.outfit = { top: fit.top, bottom: fit.bottom };
+        state.notice = '';
+        render();
+      });
+      card.querySelector('.saved-remove').addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.savedOutfits = state.savedOutfits.filter((f) => f.id !== fit.id);
+        persistState();
+        render();
+      });
+      savedRow.appendChild(card);
+    });
+
+    const tabsEl = document.getElementById('tabs');
+    tabsEl.innerHTML = '';
+    CATEGORIES.forEach((c) => {
+      const btn = document.createElement('button');
+      btn.className = 'tab' + (state.activeTab === c.key ? ' active' : '');
+      btn.innerHTML = c.label + ' <span class="count">' + state.items[c.key].length + '</span>';
+      btn.onclick = () => { state.activeTab = c.key; render(); };
+      tabsEl.appendChild(btn);
+    });
+
+    const gridEl = document.getElementById('grid');
+    gridEl.innerHTML = '';
+    const uploadTile = document.createElement('label');
+    uploadTile.className = 'upload-tile';
+    uploadTile.setAttribute('for', 'file-input');
+    uploadTile.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span>add</span>';
+    gridEl.appendChild(uploadTile);
+
+    state.items[state.activeTab].forEach((item) => {
+      const card = document.createElement('div');
+      card.className = 'item-card';
+      card.innerHTML = '<img src="' + item.src + '" />' +
+        '<button class="item-remove" aria-label="Remove item">' +
+        '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+      card.querySelector('.item-remove').onclick = () => removeItem(state.activeTab, item.id);
+      gridEl.appendChild(card);
+    });
+
+    const hint = document.getElementById('empty-hint');
+    hint.textContent = state.items[state.activeTab].length === 0
+      ? 'No ' + CATEGORIES.find((c) => c.key === state.activeTab).label.toLowerCase() + ' yet — tap "add" to upload some photos.'
+      : '';
+  }
+
+  function removeItem(category, id) {
+    state.items[category] = state.items[category].filter((it) => it.id !== id);
+    if (state.outfit.top && state.outfit.top.id === id) state.outfit.top = null;
+    if (state.outfit.bottom && state.outfit.bottom.id === id) state.outfit.bottom = null;
+    state.savedOutfits = state.savedOutfits.filter(
+      (f) => f.top.id !== id && f.bottom.id !== id
+    );
+    persistState();
+    render();
+  }
+
+  function shuffleOutfit() {
+    const tops = [...state.items.tshirt, ...state.items.shirt];
+    const bottoms = state.items.trouser;
+
+    if (tops.length === 0 && bottoms.length === 0) {
+      state.notice = 'Upload a top and a pair of trousers first.';
+      render();
+      return;
+    }
+    if (tops.length === 0) {
+      state.notice = 'Upload a shirt or t-shirt first.';
+      render();
+      return;
+    }
+    if (bottoms.length === 0) {
+      state.notice = 'Upload a pair of trousers first.';
+      render();
+      return;
+    }
+
+    let nextTop = tops[Math.floor(Math.random() * tops.length)];
+    let nextBottom = bottoms[Math.floor(Math.random() * bottoms.length)];
+
+    if (tops.length > 1 && state.outfit.top && nextTop.id === state.outfit.top.id) {
+      const rest = tops.filter((t) => t.id !== state.outfit.top.id);
+      nextTop = rest[Math.floor(Math.random() * rest.length)];
+    }
+    if (bottoms.length > 1 && state.outfit.bottom && nextBottom.id === state.outfit.bottom.id) {
+      const rest = bottoms.filter((b) => b.id !== state.outfit.bottom.id);
+      nextBottom = rest[Math.floor(Math.random() * rest.length)];
+    }
+
+    state.notice = '';
+    state.outfit = { top: nextTop, bottom: nextBottom };
+    render();
+  }
+
+  function saveCurrentOutfit() {
+    if (!state.outfit.top || !state.outfit.bottom) return;
+    if (currentOutfitIsSaved()) {
+      state.savedOutfits = state.savedOutfits.filter(
+        (o) => !(o.top.id === state.outfit.top.id && o.bottom.id === state.outfit.bottom.id)
+      );
+    } else {
+      state.savedOutfits.push({
+        id: uid(),
+        top: state.outfit.top,
+        bottom: state.outfit.bottom,
+      });
+    }
+    persistState();
+    render();
+  }
+
+  document.getElementById('shuffle-btn').addEventListener('click', shuffleOutfit);
+  document.getElementById('save-btn').addEventListener('click', saveCurrentOutfit);
+
+  document.getElementById('file-input').addEventListener('change', (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    let remaining = files.length;
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        state.items[state.activeTab].push({ id: uid(), src: reader.result });
+        remaining -= 1;
+        if (remaining === 0) {
+          persistState();
+          render();
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = '';
+  });
+
+  loadState();
+  render();
+</script>
+</body>
+</html>
