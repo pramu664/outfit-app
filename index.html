@@ -95,9 +95,12 @@
 </div>
 
 <div class="page" id="app-page" style="display:none;">
-  <header>
-    <div class="wordmark">outfit</div>
-    <div class="tagline">stop deciding. start dressing.</div>
+  <header class="app-header">
+    <div>
+      <div class="wordmark">outfit</div>
+      <div class="tagline">stop deciding. start dressing.</div>
+    </div>
+    <button id="logout-btn" class="logout-btn">Log out</button>
   </header>
 
   <section class="board">
@@ -391,48 +394,4 @@
     if (!state.outfit.top || !state.outfit.bottom) return;
     if (currentOutfitIsSaved()) {
       state.savedOutfits = state.savedOutfits.filter(
-        (o) => !(o.top.id === state.outfit.top.id && o.bottom.id === state.outfit.bottom.id)
-      );
-    } else {
-      state.savedOutfits.push({
-        id: uid(),
-        top: state.outfit.top,
-        bottom: state.outfit.bottom,
-      });
-    }
-    persistState();
-    render();
-  }
-
-  document.getElementById('shuffle-btn').addEventListener('click', shuffleOutfit);
-  document.getElementById('save-btn').addEventListener('click', saveCurrentOutfit);
-
-  document.getElementById('file-input').addEventListener('change', (e) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
-    let remaining = files.length;
-    files.forEach((file) => {
-      compressImage(file)
-        .then((dataUrl) => {
-          state.items[state.activeTab].push({ id: uid(), src: dataUrl });
-        })
-        .catch(() => {
-          state.notice = 'One photo could not be processed — try another.';
-        })
-        .finally(() => {
-          remaining -= 1;
-          if (remaining === 0) {
-            persistState();
-            render();
-          }
-        });
-    });
-    e.target.value = '';
-  });
-
-  loadState();
-  render();
-</script>
-</body>
-</html>
-  
+        (o) => !(o.top.id === state.outfit.top.id && o.bottom.id === state.outfit.bottom.id
